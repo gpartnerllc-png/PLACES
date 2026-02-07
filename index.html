@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emet Echad - Vitrine Tech</title>
+    <style>
+        :root {
+            --glass: rgba(255, 255, 255, 0.1);
+            --gold: #ffeb3b;
+            --accent: #8e44ad;
+        }
+
+        body {
+            margin: 0;
+            background: #050505;
+            color: white;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Fundo Animado */
+        .stars-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, #111 0%, #000 100%);
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(to right, #fff, var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 50px;
+        }
+
+        /* Grade de Banners Flutuantes */
+        .showcase {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            perspective: 1000px;
+        }
+
+        .banner-card {
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 20px;
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            cursor: pointer;
+            position: relative;
+            animation: float 6s ease-in-out infinite;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .banner-card:hover {
+            transform: translateY(-15px) scale(1.05);
+            border-color: var(--gold);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5), 0 0 20px rgba(255, 235, 59, 0.2);
+        }
+
+        .banner-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 15px;
+        }
+
+        .banner-card h3 { margin: 10px 0; font-size: 1.2rem; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Modal de Lead */
+        #leadModal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 1000;
+            justify-content: center; align-items: center;
+        }
+
+        .modal-content {
+            background: #111;
+            padding: 30px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 400px;
+            border: 1px solid var(--accent);
+            text-align: left;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            background: #222;
+            border: 1px solid #444;
+            color: white;
+            border-radius: 8px;
+            box-sizing: border-box;
+        }
+
+        button.submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: var(--accent);
+            border: none;
+            color: white;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="stars-bg"></div>
+
+<div class="container">
+    <header>
+        <h1>VITRINE EMET ECHAD</h1>
+    </header>
+
+    <div class="showcase">
+        <div class="banner-card" onclick="openLeadModal('https://loja.infinitepay.io/partner12', 'Smartwatch')">
+            <img src="https://http2.mlstatic.com/D_NQ_NP_755931-MLB100085105507_122025-T.jpg" alt="Smartwatch">
+            <h3>Smartwatch Premium</h3>
+            <p>Tecnologia no pulso</p>
+        </div>
+
+        <div class="banner-card" onclick="openLeadModal('https://droppfy.com', 'Dropps')">
+            <img src="https://http2.mlstatic.com/D_NQ_NP_836674-MLB87078275309_072025-T.jpg" alt="Droppfy">
+            <h3>Droppfy Original</h3>
+            <p>Suplementação Inteligente</p>
+        </div>
+
+        <div class="banner-card" onclick="openLeadModal('https://brasilbitcoin.com.br/registro/1378811', 'Bitcoin')">
+            <img src="https://http2.mlstatic.com/D_NQ_NP_920970-MLB89888543338_082025-T.jpg" alt="Bitcoin">
+            <h3>Cripto Invest</h3>
+            <p>Brasil Bitcoin Partner</p>
+        </div>
+        
+        </div>
+</div>
+
+<div id="leadModal">
+    <div class="modal-content">
+        <h2 style="color: var(--gold)">Acesso Exclusivo</h2>
+        <p>Preencha para liberar o link oficial:</p>
+        <form id="leadForm">
+            <input type="text" id="name" placeholder="Nome Completo" required>
+            <input type="email" id="email" placeholder="Seu melhor E-mail" required>
+            <input type="tel" id="whatsapp" placeholder="WhatsApp (DDD)" required>
+            <button type="submit" class="submit-btn">LIBERAR ACESSO</button>
+        </form>
+        <p id="statusMsg" style="font-size: 12px; margin-top: 10px;"></p>
+    </div>
+</div>
+
+<script>
+    // CONFIGURAÇÕES DO TELEGRAM (Substitua pelos seus dados)
+    const TELEGRAM_TOKEN = 'SEU_TOKEN_AQUI'; // Pegue no @BotFather
+    const CHAT_ID = 'SEU_CHAT_ID_AQUI';      // Pegue no @userinfobot
+
+    let currentLink = '';
+    let currentProduct = '';
+
+    function openLeadModal(link, product) {
+        currentLink = link;
+        currentProduct = product;
+        document.getElementById('leadModal').style.display = 'flex';
+    }
+
+    document.getElementById('leadForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const whatsapp = document.getElementById('whatsapp').value;
+        const statusMsg = document.getElementById('statusMsg');
+
+        statusMsg.innerText = "Processando acesso...";
+
+        // Mensagem formatada para o Bot
+        const message = `🚀 **Novo Lead - SandxCDD**\n\n` +
+                        `👤 Nome: ${name}\n` +
+                        `📧 E-mail: ${email}\n` +
+                        `📱 Whats: ${whatsapp}\n` +
+                        `🛍️ Produto: ${currentProduct}`;
+
+        try {
+            const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chat_id: CHAT_ID,
+                    text: message,
+                    parse_mode: 'Markdown'
+                })
+            });
+
+            if (response.ok) {
+                statusMsg.style.color = "#4CAF50";
+                statusMsg.innerText = "Sucesso! Redirecionando...";
+                setTimeout(() => {
+                    window.location.href = currentLink;
+                }, 1500);
+            } else {
+                throw new Error();
+            }
+        } catch (error) {
+            statusMsg.style.color = "#ff5252";
+            statusMsg.innerText = "Erro ao conectar. Tente novamente.";
+        }
+    });
+
+    // Fechar modal ao clicar fora
+    window.onclick = function(event) {
+        if (event.target == document.getElementById('leadModal')) {
+            document.getElementById('leadModal').style.display = "none";
+        }
+    }
+</script>
+
+</body>
+</html>
